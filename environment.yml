@@ -1,0 +1,7 @@
+name: comics2marc
+dependencies:
+  - python=3.5
+  - xlrd
+  - pip:
+    - pymarc
+  
