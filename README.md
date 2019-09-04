@@ -7,10 +7,12 @@ To set up environment from file: ```conda env create –f=environment.yml```
 
 ## Input file
 Subfield delimiters in spreadsheet must be '$' with no spaces before or after the subfield.
+
 ```Zelenetz, Alan,$1https://www.wikidata.org/wiki/Q4708123```
 
 ## Usage
 ```python comics2marc.py input_spreadsheet.xlsx```
+
 MARC file is saved in the same directory.
 
 ## Contact
