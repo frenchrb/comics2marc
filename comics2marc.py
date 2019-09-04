@@ -448,7 +448,7 @@ def main(arglist):
             record.add_ordered_field(field_655)
         
         if characters:
-            print(characters)
+            # print(characters)
             subfield_content = 'Characters: '
             for i in characters[:-1]:
                 subfield_content += i + '; '
