@@ -1,7 +1,7 @@
 Script to transform comic book metadata in spreadsheet format into MARC records
 
 ## Requirements
-Created and tested with Python 3.5. Requires xlrd and pymarc. 
+Tested with Python 3.7. Requires xlrd and pymarc. 
 
 To set up environment from file: ```conda env create –f=environment.yml```
 

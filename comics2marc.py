@@ -26,15 +26,14 @@ def parse_title(string):
     return title
 
 
-def lowercase_title(string):
-    title = string
-    title = re.sub(r'Vol', r'vol', title)
-    title = re.sub(r'No\.', r'no.', title)
-    return title
+def lowercase_numbering(string):
+    num = string
+    num = re.sub(r'Vol', r'vol', num)
+    num = re.sub(r'No\.', r'no.', num)
+    return num
 
 
 def subfields_from_string(string):
-    # print('STRING IS:', string)
     subfields = []
     if '$' in string:
         string = string.split('$')
@@ -48,43 +47,99 @@ def subfields_from_string(string):
     else:
         subfields.append('a')
         subfields.append(string)
-    # print()
     return subfields
 
 
-def subfields_from_string_relator(string, relator):
-    # print('STRING IS:', string)
-    subfields = []
-    if '$' in string:
-        string = string.split('$')
-        # print(string)
-        # print(len(string) - 1)
-        # print(string[len(string) - 1])
-        if not string[len(string) - 2].endswith(',') and not string[len(string) - 2].endswith('-'):
-            string[len(string) - 2] += ','
-        string.insert(len(string) - 1, 'e' + relator + '.')
-        # print(i)
-        for x in string:
-            if string.index(x) == 0:
-                subfields.append('a')
-                subfields.append(x)
-            else:
-                subfields.append(x[0:1])
-                subfields.append(x[1:])
+def subfields_from_string_relator(string, relators):
+    subfields = subfields_from_string(string)
+    
+    if '1' in subfields:
+        if len(relators) == 1:
+            subfields.insert(subfields.index('1'), 'e')
+            subfields.insert(subfields.index('1'), relators[0] + '.')
+        else:
+            for i in relators[:-1]:
+                subfields.insert(subfields.index('1'), 'e')
+                subfields.insert(subfields.index('1'), i + ',')
+            subfields.insert(subfields.index('1'), 'e')
+            subfields.insert(subfields.index('1'), relators[-1] + '.')
+        
     else:
-        if not string.endswith(',') and not string.endswith('-'):
-            string += ','
-        subfields.append('a')
-        subfields.append(string)
-        subfields.append('e')
-        subfields.append(relator + '.')
-    # print()
+        if len(relators) == 1:
+            subfields.append('e')
+            subfields.append(relators[0] + '.')
+        else:
+            for i in relators[:-1]:
+                subfields.append('e')
+                subfields.append(i + ',')
+            subfields.append('e')
+            subfields.append(relators[-1] + '.')
+    
+    index_subf_before_relator = subfields.index('e') - 1
+    if not subfields[index_subf_before_relator].endswith(',') and not subfields[index_subf_before_relator].endswith('-'):
+        subfields[index_subf_before_relator] += ','
     return subfields
 
+
+def title_to_series(string):
+    if 'Vol.' in string or 'No.' in string:
+        series = subfields_from_string(string)
+        series_dict = {series[i]: series[i + 1] for i in range(0, len(series), 2)}
+        series_dict['n'] = re.sub(r'^(.*?),? \[?\d{4}\]?$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), January$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), February$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), March$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), April$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), May$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), June$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), July$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), August$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), September$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), October$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), November$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = re.sub(r'^(.*?), December$', r'\g<1>', series_dict['n'])
+        series_dict['n'] = lowercase_numbering(series_dict['n'])
+        series_dict['v'] = series_dict.pop('n')
+        if 'b' in series_dict:
+            series_dict['a'] = series_dict['a'].rstrip(':') + '. ' + series_dict['b'][0].upper() + series_dict['b'][1:].rstrip(',') + ';'
+            series_dict.pop('b')
+        else:
+            series_dict['a'] = series_dict['a'].rstrip(',') +  ';'
+        series = ['a', series_dict['a'], 'v', series_dict['v']]
+        return series
+    else:
+        return None
+    
+
+def date_from_string(string):
+    date = re.sub(r'^.*?(\[?\d{4}\]?).*$', r'\g<1>', string)
+    return date
+
+
+def year_from_date(string):
+    year = re.sub(r'\[?(\d{4})\]?', r'\g<1>', string)
+    return year
+
+
+def country_code_from_pub_place(string):
+    country_dict = {"Albania": "aa ", "Alberta": "abc", "Australian Capital Territory": "aca", "Algeria": "ae ", "Afghanistan": "af ", "Argentina": "ag ", "Armenia (Republic)": "ai ", "Azerbaijan": "aj ", "Alaska": "aku", "Alabama": "alu", "Anguilla": "am ", "Andorra": "an ", "Angola": "ao ", "Antigua and Barbuda": "aq ", "Arkansas": "aru", "American Samoa": "as ", "Australia": "at ", "Austria": "au ", "Aruba": "aw ", "Antarctica": "ay ", "Arizona": "azu", "Bahrain": "ba ", "Barbados": "bb ", "British Columbia": "bcc", "Burundi": "bd ", "Belgium": "be ", "Bahamas": "bf ", "Bangladesh": "bg ", "Belize": "bh ", "British Indian Ocean Territory": "bi ", "Brazil": "bl ", "Bermuda Islands": "bm ", "Bosnia and Herzegovina": "bn ", "Bolivia": "bo ", "Solomon Islands": "bp ", "Burma": "br ", "Botswana": "bs ", "Bhutan": "bt ", "Bulgaria": "bu ", "Bouvet Island": "bv ", "Belarus": "bw ", "Brunei": "bx ", "Caribbean Netherlands": "ca ", "California": "cau", "Cambodia": "cb ", "China": "cc ", "Chad": "cd ", "Sri Lanka": "ce ", "Congo (Brazzaville)": "cf ", "Congo (Democratic Republic)": "cg ", "China (Republic : 1949- )": "ch ", "Croatia": "ci ", "Cayman Islands": "cj ", "Colombia": "ck ", "Chile": "cl ", "Cameroon": "cm ", "Curaçao": "co ", "Colorado": "cou", "Comoros": "cq ", "Costa Rica": "cr ", "Connecticut": "ctu", "Cuba": "cu ", "Cabo Verde": "cv ", "Cook Islands": "cw ", "Central African Republic": "cx ", "Cyprus": "cy ", "District of Columbia": "dcu", "Delaware": "deu", "Denmark": "dk ", "Benin": "dm ", "Dominica": "dq ", "Dominican Republic": "dr ", "Eritrea": "ea ", "Ecuador": "ec ", "Equatorial Guinea": "eg ", "Timor-Leste": "em ", "England": "enk", "Estonia": "er ", "El Salvador": "es ", "Ethiopia": "et ", "Faroe Islands": "fa ", "French Guiana": "fg ", "Finland": "fi ", "Fiji": "fj ", "Falkland Islands": "fk ", "Florida": "flu", "Micronesia (Federated States)": "fm ", "French Polynesia": "fp ", "France": "fr ", "Terres australes et antarctiques françaises": "fs ", "Djibouti": "ft ", "Georgia": "gau", "Kiribati": "gb ", "Grenada": "gd ", "Guernsey": "gg ", "Ghana": "gh ", "Gibraltar": "gi ", "Greenland": "gl ", "Gambia": "gm ", "Gabon": "go ", "Guadeloupe": "gp ", "Greece": "gr ", "Georgia (Republic)": "gs ", "Guatemala": "gt ", "Guam": "gu ", "Guinea": "gv ", "Germany": "gw ", "Guyana": "gy ", "Gaza Strip": "gz ", "Hawaii": "hiu", "Heard and McDonald Islands": "hm ", "Honduras": "ho ", "Haiti": "ht ", "Hungary": "hu ", "Iowa": "iau", "Iceland": "ic ", "Idaho": "idu", "Ireland": "ie ", "India": "ii ", "Illinois": "ilu", "Isle of Man": "im ", "Indiana": "inu", "Indonesia": "io ", "Iraq": "iq ", "Iran": "ir ", "Israel": "is ", "Italy": "it ", "Côte d'Ivoire": "iv ", "Iraq-Saudi Arabia Neutral Zone": "iy ", "Japan": "ja ", "Jersey": "je ", "Johnston Atoll": "ji ", "Jamaica": "jm ", "Jordan": "jo ", "Kenya": "ke ", "Kyrgyzstan": "kg ", "Korea (North)": "kn ", "Korea (South)": "ko ", "Kansas": "ksu", "Kuwait": "ku ", "Kosovo": "kv ", "Kentucky": "kyu", "Kazakhstan": "kz ", "Louisiana": "lau", "Liberia": "lb ", "Lebanon": "le ", "Liechtenstein": "lh ", "Lithuania": "li ", "Lesotho": "lo ", "Laos": "ls ", "Luxembourg": "lu ", "Latvia": "lv ", "Libya": "ly ", "Massachusetts": "mau", "Manitoba": "mbc", "Monaco": "mc ", "Maryland": "mdu", "Maine": "meu", "Mauritius": "mf ", "Madagascar": "mg ", "Michigan": "miu", "Montserrat": "mj ", "Oman": "mk ", "Mali": "ml ", "Malta": "mm ", "Minnesota": "mnu", "Montenegro": "mo ", "Missouri": "mou", "Mongolia": "mp ", "Martinique": "mq ", "Morocco": "mr ", "Mississippi": "msu", "Montana": "mtu", "Mauritania": "mu ", "Moldova": "mv ", "Malawi": "mw ", "Mexico": "mx ", "Malaysia": "my ", "Mozambique": "mz ", "Nebraska": "nbu", "North Carolina": "ncu", "North Dakota": "ndu", "Netherlands": "ne ", "Newfoundland and Labrador": "nfc", "Niger": "ng ", "New Hampshire": "nhu", "Northern Ireland": "nik", "New Jersey": "nju", "New Brunswick": "nkc", "New Caledonia": "nl ", "New Mexico": "nmu", "Vanuatu": "nn ", "Norway": "no ", "Nepal": "np ", "Nicaragua": "nq ", "Nigeria": "nr ", "Nova Scotia": "nsc", "Northwest Territories": "ntc", "Nauru": "nu ", "Nunavut": "nuc", "Nevada": "nvu", "Northern Mariana Islands": "nw ", "Norfolk Island": "nx ", "New York": "nyu", "New Zealand": "nz ", "Ohio": "ohu", "Oklahoma": "oku", "Ontario": "onc", "Oregon": "oru", "Mayotte": "ot ", "Pennsylvania": "pau", "Pitcairn Island": "pc ", "Peru": "pe ", "Paracel Islands": "pf ", "Guinea-Bissau": "pg ", "Philippines": "ph ", "Prince Edward Island": "pic", "Pakistan": "pk ", "Poland": "pl ", "Panama": "pn ", "Portugal": "po ", "Papua New Guinea": "pp ", "Puerto Rico": "pr ", "Palau": "pw ", "Paraguay": "py ", "Qatar": "qa ", "Queensland": "qea", "Québec (Province)": "quc", "Serbia": "rb ", "Réunion": "re ", "Zimbabwe": "rh ", "Rhode Island": "riu", "Romania": "rm ", "Russia (Federation)": "ru ", "Rwanda": "rw ", "South Africa": "sa ", "Saint-Barthélemy": "sc ", "South Carolina": "scu", "South Sudan": "sd ", "South Dakota": "sdu", "Seychelles": "se ", "Sao Tome and Principe": "sf ", "Senegal": "sg ", "Spanish North Africa": "sh ", "Singapore": "si ", "Sudan": "sj ", "Sierra Leone": "sl ", "San Marino": "sm ", "Sint Maarten": "sn ", "Saskatchewan": "snc", "Somalia": "so ", "Spain": "sp ", "Eswatini": "sq ", "Surinam": "sr ", "Western Sahara": "ss ", "Saint-Martin": "st ", "Scotland": "stk", "Saudi Arabia": "su ", "Sweden": "sw ", "Namibia": "sx ", "Syria": "sy ", "Switzerland": "sz ", "Tajikistan": "ta ", "Turks and Caicos Islands": "tc ", "Togo": "tg ", "Thailand": "th ", "Tunisia": "ti ", "Turkmenistan": "tk ", "Tokelau": "tl ", "Tasmania": "tma", "Tennessee": "tnu", "Tonga": "to ", "Trinidad and Tobago": "tr ", "United Arab Emirates": "ts ", "Turkey": "tu ", "Tuvalu": "tv ", "Texas": "txu", "Tanzania": "tz ", "Egypt": "ua ", "United States Misc. Caribbean Islands": "uc ", "Uganda": "ug ", "Ukraine": "un ", "United States Misc. Pacific Islands": "up ", "Utah": "utu", "Burkina Faso": "uv ", "Uruguay": "uy ", "Uzbekistan": "uz ", "Virginia": "vau", "British Virgin Islands": "vb ", "Vatican City": "vc ", "Venezuela": "ve ", "Virgin Islands of the United States": "vi ", "Vietnam": "vm ", "Various places": "vp ", "Victoria": "vra", "Vermont": "vtu", "Washington (State)": "wau", "Western Australia": "wea", "Wallis and Futuna": "wf ", "Wisconsin": "wiu", "West Bank of the Jordan River": "wj ", "Wake Island": "wk ", "Wales": "wlk", "Samoa": "ws ", "West Virginia": "wvu", "Wyoming": "wyu", "Christmas Island (Indian Ocean)": "xa ", "Cocos (Keeling) Islands": "xb ", "Maldives": "xc ", "Saint Kitts-Nevis": "xd ", "Marshall Islands": "xe ", "Midway Islands": "xf ", "Coral Sea Islands Territory": "xga", "Niue": "xh ", "Saint Helena": "xj ", "Saint Lucia": "xk ", "Saint Pierre and Miquelon": "xl ", "Saint Vincent and the Grenadines": "xm ", "North Macedonia": "xn ", "New South Wales": "xna", "Slovakia": "xo ", "Northern Territory": "xoa", "Spratly Island": "xp ", "Czech Republic": "xr ", "South Australia": "xra", "South Georgia and the South Sandwich Islands": "xs ", "Slovenia": "xv ", "No place, unknown, or undetermined": "xx ", "Canada": "xxc", "United Kingdom": "xxk", "United States": "xxu", "Yemen": "ye ", "Yukon Territory": "ykc", "Zambia": "za "}
+    if "Place of publication not identified" in string:
+        country = "No place, unknown, or undetermined"
+    else:
+        country = re.sub(r'\[', r'', string)
+        country = re.sub(r'\]', r'', country)
+        country = re.sub(r'^.*, ([a-zA-Z ]*)$', r'\g<1>', country)
+    if not country:
+        country = "No place, unknown, or undetermined"
+    country_code = country_dict[country]
+    return country_code
+    
 
 def name_direct_order(string):
-    last = re.sub(r'^(.*?), (.*),$', r'\g<1>', string)
-    first = re.sub(r'^(.*?), (.*),$', r'\g<2>', string)
+    if string.endswith(','):
+        string = string.rstrip(',')
+    last = re.sub(r'^(.*?), (.*)$', r'\g<1>', string)
+    first = re.sub(r'^(.*?), (.*)$', r'\g<2>', string)
     name = first + ' ' + last
     return name
 
@@ -93,7 +148,6 @@ def main(arglist):
     parser = argparse.ArgumentParser()
     parser.add_argument('input', help='path to spreadsheet')
     # parser.add_argument('output', help='save directory')
-    # parser.add_argument('--production', help='production DOIs', action='store_true')
     args = parser.parse_args(arglist)
     
     input = Path(args.input)
@@ -102,17 +156,21 @@ def main(arglist):
     book_in = xlrd.open_workbook(str(input))
     sheet = book_in.sheet_by_index(0)  # get first sheet
     col_headers = sheet.row_values(0)
-    # print(col_headers)
-    # print()
     
     title_col = col_headers.index('Title')
-    subj_col = col_headers.index('Subject')
+    subj_person_col = col_headers.index('Subject_Person')
+    subj_topical_col = col_headers.index('Subject_Topical')
+    subj_place_col = col_headers.index('Subject_Place')
+    subj_corp_col = col_headers.index('Subject_Jurisdiction')
     genre_col = col_headers.index('Genre')
-    pages_col = col_headers.index('Pages')
-    date_col = col_headers.index('Date')
-    pub_place_col = col_headers.index('Pub_Place')
+    pages_col = col_headers.index('Page Count')
+    pub_date_col = col_headers.index('Publication Date')
+    copy_date_col = col_headers.index('Copyright Date')
+    pub_place_col = col_headers.index('Place of Publication')
     publisher_col = col_headers.index('Publisher')
+    edition_col = col_headers.index('Edition')
     source_col = col_headers.index('Source')
+    source_acq_col = col_headers.index('Source of Acquisition')
     writer_col = col_headers.index('Writer')
     penciller_col = col_headers.index('Penciller')
     inker_col = col_headers.index('Inker')
@@ -120,17 +178,22 @@ def main(arglist):
     letterer_col = col_headers.index('Letterer')
     cover_artist_col = col_headers.index('Cover Artist')
     editor_col = col_headers.index('Editor')
-    hist_note_col = col_headers.index('Historical Note')
-    note_col = col_headers.index('Note')
+    # hist_note_col = col_headers.index('Historical Note')
+    notes_col = col_headers.index('Notes')
     characters_col = col_headers.index('Characters')
-    story_arc_col = col_headers.index('Story Arc')
+    synopsis_col = col_headers.index('Synopsis')
     toc_col = col_headers.index('Table of Contents')
-    series_col = col_headers.index('Is Part of Series')
+    in_series_col = col_headers.index('Is Part of Series')
+    black_creators_col = col_headers.index('Black Creators (MARC 590)')
+    black_chars_col = col_headers.index('Black Characters (MARC 590)')
+    isbn_col = col_headers.index('ISBN')
+    color_col = col_headers.index('Color?')
+    series_note_col = col_headers.index('Series Note')
     
     outmarc = open('records.mrc', 'wb')
     
     # Boilerplate fields
-    field_ldr = '00000nam  2200000Ii 4500'
+    field_ldr = '00000nam a2200000Ii 4500'
     field_040 = Field(tag = '040',
                 indicators = [' ',' '],
                 subfields = [
@@ -141,7 +204,7 @@ def main(arglist):
     field_049 = Field(tag = '049',
                 indicators = [' ',' '],
                 subfields = [
-                    'a', 'VMCM'])
+                    'a', 'VMCS'])
     field_336_text = Field(tag = '336',
                     indicators = [' ',' '],
                     subfields = [
@@ -193,22 +256,46 @@ def main(arglist):
         
         title = sheet.cell(row, title_col).value
         print(title)
-        lower_title = parse_title(lowercase_title(title))
-        title = parse_title(sheet.cell(row, title_col).value)
-        has_part_title = False
-        if len(title) == 3:
-            has_part_title = True
         
-        subj = sheet.cell(row, subj_col).value
-        subj = [x.strip() for x in subj.split(';')]
+        subj_person = sheet.cell(row, subj_person_col).value
+        if subj_person:
+            subj_person = [x.strip() for x in subj_person.split(';')]
+        subj_topical = sheet.cell(row, subj_topical_col).value
+        if subj_topical:
+            subj_topical = [x.strip() for x in subj_topical.split(';')]
+        subj_place = sheet.cell(row, subj_place_col).value
+        if subj_place:
+            subj_place = [x.strip() for x in subj_place.split(';')]
+        subj_corp = sheet.cell(row, subj_corp_col).value
+        if subj_corp:
+            subj_corp = [x.strip() for x in subj_corp.split(';')]
         genre = sheet.cell(row, genre_col).value
         genre = [x.strip() for x in genre.split(';')]
-        pages = sheet.cell(row, pages_col).value
-        date = sheet.cell(row, date_col).value[0:4]
+        pages = str(sheet.cell(row, pages_col).value)
+        pub_date = str(sheet.cell(row, pub_date_col).value)
+        pub_date_str = date_from_string(pub_date)
+        pub_date_year = year_from_date(pub_date_str)
+        copy_date = ''
+        copy_date = str(sheet.cell(row, copy_date_col).value)
+        copy_date_str = date_from_string(copy_date)
+        copy_date_year = year_from_date(copy_date_str)
         pub_place = sheet.cell(row, pub_place_col).value
         publisher = sheet.cell(row, publisher_col).value
+        edition = sheet.cell(row, edition_col).value
         source = sheet.cell(row, source_col).value
-        # writer = sheet.cell(row, writer_col).value
+        source_acq = sheet.cell(row, source_acq_col).value
+        characters = sheet.cell(row, characters_col).value
+        black_creators = sheet.cell(row, black_creators_col).value
+        if black_creators:
+            black_creators = [x.strip() for x in black_creators.split(';')]
+        black_chars = sheet.cell(row, black_chars_col).value
+        if black_chars:
+            black_chars = [x.strip() for x in black_chars.split(';')]
+        isbn = str(sheet.cell(row, isbn_col).value)
+        color = sheet.cell(row, color_col).value
+        series_note = sheet.cell(row, series_note_col).value
+        
+        country_code = country_code_from_pub_place(pub_place)
         
         writer = []
         if sheet.cell(row, writer_col).value:
@@ -225,9 +312,6 @@ def main(arglist):
         colorist = []
         if sheet.cell(row, colorist_col).value:
             colorist = sheet.cell(row, colorist_col).value
-            # print(colorist)
-            # print('COLORIST FROM SHEET=' + colorist + '=END')
-            # print(bool(colorist))
             colorist = [x.strip() for x in colorist.split(';')]
         letterer = []
         if sheet.cell(row, letterer_col).value:
@@ -241,31 +325,73 @@ def main(arglist):
         if sheet.cell(row, editor_col).value:
             editor = sheet.cell(row, editor_col).value
             editor = [x.strip() for x in editor.split(';')]
-        hist_note = []
-        if sheet.cell(row, hist_note_col).value:
-            hist_note = sheet.cell(row, hist_note_col).value
-        note = []
-        if sheet.cell(row, note_col).value:
-            note = sheet.cell(row, note_col).value
-        characters = []
-        if sheet.cell(row, characters_col).value:
-            characters  = sheet.cell(row, characters_col).value
-            characters = [x.strip() for x in characters.split(';')]
-        story_arc = []
-        if sheet.cell(row, story_arc_col).value:
-            story_arc = sheet.cell(row, story_arc_col).value
+        # hist_note = []
+        # if sheet.cell(row, hist_note_col).value:
+            # hist_note = sheet.cell(row, hist_note_col).value
+        notes = []
+        if sheet.cell(row, notes_col).value:
+            notes = sheet.cell(row, notes_col).value
+        synopsis = []
+        if sheet.cell(row, synopsis_col).value:
+            synopsis = sheet.cell(row, synopsis_col).value
         toc = []
         if sheet.cell(row, toc_col).value:
             toc = sheet.cell(row, toc_col).value
-        series = sheet.cell(row, series_col).value
+        in_series = sheet.cell(row, in_series_col).value
         
-        # print(cover_artist)
-        # print(characters)
-        # print(writer)
-        # print(subfields_from_string(writer[0]))
-        # print(name_direct_order(subfields_from_string(writer[0])[1]))
-        # print(title)
-        # print(parse_title(title))
+        
+        contribs = {}
+        if writer:
+            for i in writer:
+                contribs.update({i: ['writer']})
+        if penciller:
+            for i in penciller:
+                if i in contribs:
+                    role_list = contribs[i]
+                    role_list.append('penciller')
+                    contribs.update({i: role_list})
+                else:
+                    contribs.update({i: ['penciller']})
+        if inker:
+            for i in inker:
+                if i in contribs:
+                    role_list = contribs[i]
+                    role_list.append('inker')
+                    contribs.update({i: role_list})
+                else:
+                    contribs.update({i: ['inker']})
+        if colorist:
+            for i in colorist:
+                if i in contribs:
+                    role_list = contribs[i]
+                    role_list.append('colorist')
+                    contribs.update({i: role_list})
+                else:
+                    contribs.update({i: ['colorist']})
+        if letterer:
+            for i in letterer:
+                if i in contribs:
+                    role_list = contribs[i]
+                    role_list.append('letterer')
+                    contribs.update({i: role_list})
+                else:
+                    contribs.update({i: ['letterer']})
+        if cover_artist:
+            for i in cover_artist:
+                if i in contribs:
+                    role_list = contribs[i]
+                    role_list.append('cover artist')
+                    contribs.update({i: role_list})
+                else:
+                    contribs.update({i: ['cover artist']})
+        if editor:
+            for i in editor:
+                if i in contribs:
+                    role_list = contribs[i]
+                    role_list.append('editor')
+                    contribs.update({i: role_list})
+                else:
+                    contribs.update({i: ['editor']})
         
         record = Record()
         
@@ -285,66 +411,70 @@ def main(arglist):
         
         # Add other fields
         today = datetime.today().strftime('%y%m%d')
-        data_008 = today + 't' + date + date + 'xx a     6    000 1 eng d'
+        if copy_date:
+            data_008 = today + 't' + pub_date_year + copy_date_year + country_code + 'a     6    000 1 eng d'
+        else:
+            data_008 = today + 's' + pub_date_year + '    ' + country_code + 'a     6    000 1 eng d'
         field_008 = Field(tag = '008',
                     data = data_008)
         record.add_ordered_field(field_008)
         
-        subfields_099 = []
-        if has_part_title:
-            subfields_099 = [
-                'a', title[0] + ': ' + title[1],
-                'a', title[2]]
-        else:
-            subfields_099 = [
-                'a', title[0],
-                'a', title[1]]
+        if isbn:
+            field_020 = Field(tag = '020',
+                        indicators = [' ',' '],
+                        subfields = [
+                            'a', isbn])
+            record.add_ordered_field(field_020)
+        
+        
+        subfields_099 = subfields_from_string(title)
+        if 'b' in subfields_099:
+            subfields_099.pop(3)
+            subfields_099.pop(2)
+        if 'n' in subfields_099:
+            subfields_099[subfields_099.index('n')] = 'a'
+        if subfields_099[1].endswith(',') or subfields_099[1].endswith(':'):
+            subfields_099[1] = subfields_099[1][:-1]
         field_099 = Field(tag = '099',
                     indicators = [' ','9'],
                     subfields = subfields_099)
         record.add_ordered_field(field_099)
-                  
-        if writer:
-            # Add 100 for first writer
-            subfield_content = subfields_from_string_relator(writer[0], 'writer')
-            field_100 = Field(tag = '100',
-                    indicators = ['1', ' '],
-                    subfields = subfield_content)
-            record.add_ordered_field(field_100)
-            # Multiple writers
-            if len(writer)>1:
-                # Add 700s for all writers after the first
-                for i in writer[1:]:
-                    subfield_content = subfields_from_string_relator(i, 'writer')
+        
+        for i in contribs:
+            if i == list(contribs.keys())[0] and 'writer' in contribs[i]: # first contributor is a writer
+                subfield_content = subfields_from_string_relator(i, contribs[i])
+                field_100 = Field(tag = '100',
+                        indicators = ['1', ' '],
+                        subfields = subfield_content)
+                record.add_ordered_field(field_100)
+            else:
+                subfield_content = subfields_from_string_relator(i, contribs[i])
+                if ',' not in subfield_content[1]:
+                    field_710 = Field(tag = '710',
+                                indicators = ['2',' '],
+                                subfields = subfield_content)
+                    record.add_ordered_field(field_710)
+                else:
                     field_700 = Field(tag = '700',
                                 indicators = ['1',' '],
                                 subfields = subfield_content)
-                    record.add_ordered_field(field_700)                    
+                    record.add_ordered_field(field_700)
         
-        if writer:
+        if contribs and 'writer' in contribs[list(contribs.keys())[0]]:
             f245_ind1 = 1
         else:
             f245_ind1 = 0
         
         f245_ind2 = 0
-        if str.startswith(title[0], 'The '):
+        if str.startswith(title, 'The '):
             f245_ind2 = 4
-        elif str.startswith(title[0], 'An '):
+        elif str.startswith(title, 'An '):
             f245_ind2 = 3
-        elif str.startswith(title[0], 'A '):
+        elif str.startswith(title, 'A '):
             f245_ind2 = 2
         
-        subfields_245 = []
-        if has_part_title:
-            subfields_245 = [
-                'a', title[0] + '.',
-                'p', title[1] + ',',
-                'n', title[2]]
-        else:
-            subfields_245 = [
-                'a', title[0] + ',',
-                'n', title[1]]
-        # If writer exists, add $c
+        subfields_245 = subfields_from_string(title)
+        # If writer exists, add $c for first writer
         if writer:
             subfields_245[-1] = subfields_245[-1] + ' /'
             subfields_245.append('c')
@@ -357,54 +487,72 @@ def main(arglist):
                     subfields = subfields_245)
         record.add_ordered_field(field_245)
         
+        if edition:
+            if not edition.endswith('.'):
+                edition += '.'
+            field_250 = Field(tag = '250',
+                    indicators = [' ', ' '],
+                    subfields = [
+                        'a', edition])
+            record.add_ordered_field(field_250)
+        
         field_264_1 = Field(tag = '264',
                     indicators = [' ','1'],
                     subfields = [
                         'a', pub_place + ' :',
                         'b', publisher + ',',
-                        'c', date + '.'])
+                        'c', pub_date_str + '.'])
         record.add_ordered_field(field_264_1)
         
-        field_264_4 = Field(tag = '264',
-                    indicators = [' ','4'],
-                    subfields = [
-                        'c', '©' + date])
-        record.add_ordered_field(field_264_4)
+        if copy_date:
+            field_264_4 = Field(tag = '264',
+                        indicators = [' ','4'],
+                        subfields = [
+                            'c', '©' + copy_date_str])
+            record.add_ordered_field(field_264_4)
+        
+        if color == 'y':
+            subfields_300 = [
+                'a', pages + ' pages :',
+                'b', 'chiefly color illustrations.']
+        elif color == 'n':
+            subfields_300 = [
+                'a', pages + ' pages :',
+                'b', 'black and white illustrations.']
         
         field_300 = Field(tag = '300',
                     indicators = [' ',' '],
-                    subfields = [
-                        'a', pages + ' pages :',
-                        'b', 'chiefly color illustrations.'])
+                    subfields = subfields_300)
         record.add_ordered_field(field_300)
         
-        subfields_490 = []
-        if has_part_title:
-            subfields_490 = [
-                'a', lower_title[0] + '. ' + lower_title[1] + ' ;',
-                'v', lower_title[2]]
-        else:
-            subfields_490 = [
-                'a', lower_title[0] + ' ;',
-                'v', lower_title[1]]
-        field_490 = Field(tag = '490',
-                    indicators = ['1',' '],
-                    subfields = subfields_490)
-        record.add_ordered_field(field_490)
+        if title_to_series(title):
+            subfields_490 = title_to_series(title)
+            field_490 = Field(tag = '490',
+                        indicators = ['1',' '],
+                        subfields = subfields_490)
+            record.add_ordered_field(field_490)
         
-        if hist_note:
-            field_500_hist = Field(tag = '500',
+        if series_note:
+            if not series_note.endswith('.'):
+                series_note += '.'
+            field_490_series_note = Field(tag = '490',
+                                    indicators = ['1', ' '],
+                                    subfields = ['a', series_note])
+            record.add_ordered_field(field_490_series_note)
+        
+        # if hist_note:
+        #     field_500_hist = Field(tag = '500',
+        #                 indicators = [' ',' '],
+        #                 subfields = [
+        #                     'a', hist_note + '.'])
+        #     record.add_ordered_field(field_500_hist)
+        
+        if notes:
+            field_500_notes = Field(tag = '500',
                         indicators = [' ',' '],
                         subfields = [
-                            'a', hist_note + '.'])
-            record.add_ordered_field(field_500_hist)
-        
-        if note:
-            field_500_note = Field(tag = '500',
-                        indicators = [' ',' '],
-                        subfields = [
-                            'a', note + '.'])
-            record.add_ordered_field(field_500_note)
+                            'a', notes + '.'])
+            record.add_ordered_field(field_500_notes)
         
         if toc:
             if not toc.endswith('.') and not toc.endswith('?') and not toc.endswith('!'):
@@ -415,144 +563,149 @@ def main(arglist):
                             'a', toc])
             record.add_ordered_field(field_505)
         
-        if story_arc:
+        if synopsis:
             field_520 = Field(tag = '520',
                         indicators = [' ',' '],
                         subfields = [
-                            'a', '"' + story_arc + '" -- Grand Comics Database.'])
+                            'a', synopsis])
             record.add_ordered_field(field_520)
         
-        field_561 = Field(tag = '561',
-                    indicators = [' ',' '],
-                    subfields = [
-                        'a', source + '.'])
-        record.add_ordered_field(field_561)
+        if black_creators:
+            for i in black_creators:
+                if not i.endswith('.'):
+                    i += '.'
+                field_590_creators = Field(tag = '590',
+                            indicators = [' ',' '],
+                            subfields = [
+                                'a', i])
+                record.add_ordered_field(field_590_creators)
         
-        for i in subj:
-            if not i.endswith('.') and not i.endswith(')'):
-                i += '.'
-            field_650 = Field(tag = '650',
-                    indicators = [' ','0'],
-                    subfields = [
-                        'a', i])
-            record.add_ordered_field(field_650)
+        if black_chars:
+            for i in black_chars:
+                if not i.endswith('.'):
+                    i += '.'
+                field_590_chars = Field(tag = '590',
+                            indicators = [' ',' '],
+                            subfields = [
+                                'a', i])
+                record.add_ordered_field(field_590_chars)
         
-        for i in genre:
-            if not i.endswith('.') and not i.endswith(')'):
-                i += '.'
-            field_655 = Field(tag = '655',
-                    indicators = [' ','7'],
-                    subfields = [
-                        'a', i,
-                        '2', 'lcgft'])
-            record.add_ordered_field(field_655)
+        if source:
+            field_541_source = Field(tag = '541',
+                        indicators = [' ',' '],
+                        subfields = [
+                            'a', source + '.'])
+            record.add_ordered_field(field_541_source)
+        
+        if source_acq:
+            field_541_source_acq = Field(tag = '541',
+                        indicators = [' ',' '],
+                        subfields = [
+                            'a', source_acq + '.'])
+            record.add_ordered_field(field_541_source_acq)
+        
+        if subj_person:
+            for i in subj_person:
+                i_subfields = subfields_from_string(i)
+                
+                # Set first indicator based on presence of comma in $a
+                if 'a' in i_subfields:
+                    if ',' in i_subfields[i_subfields.index('a') + 1]:
+                        field_600_ind1 = '1'
+                    else:
+                        field_600_ind1 = '0'
+                
+                if '1' in i_subfields:
+                    last_except_subf1 = i_subfields.index('1') - 1
+                else:
+                    last_except_subf1 = len(i_subfields) - 1
+                
+                if i_subfields[last_except_subf1].endswith(','):
+                    i_subfields[last_except_subf1] = re.sub(r'^(.*),$', r'\g<1>.', i_subfields[last_except_subf1])
+                if not i_subfields[last_except_subf1].endswith('.') and not i_subfields[last_except_subf1].endswith(')') and not i_subfields[last_except_subf1].endswith('?') and not i_subfields[last_except_subf1].endswith('-'):
+                    i_subfields[last_except_subf1] += '.'
+                
+                field_600 = Field(tag = '600', 
+                            indicators = [field_600_ind1,'0'],
+                            subfields = i_subfields)
+                record.add_ordered_field(field_600)
+        
+        if subj_topical:
+            for i in subj_topical:
+                i_subfields = subfields_from_string(i)
+                if not i_subfields[-1].endswith('.') and not i_subfields[-1].endswith(')'):
+                    i_subfields[-1] += '.'
+                field_650 = Field(tag = '650',
+                            indicators = [' ','0'],
+                            subfields = i_subfields)
+                record.add_ordered_field(field_650)
+        
+        if subj_place:
+            for i in subj_place:
+                i_subfields = subfields_from_string(i)
+                if not i_subfields[-1].endswith('.') and not i_subfields[-1].endswith(')'):
+                    i_subfields[-1] += '.'
+                field_651 = Field(tag = '651',
+                        indicators = [' ','0'],
+                        subfields = i_subfields)
+                record.add_ordered_field(field_651)
+        
+        if subj_corp:
+            for i in subj_corp:
+                i_subfields = subfields_from_string(i)
+                if not i_subfields[-1].endswith('.') and not i_subfields[-1].endswith(')'):
+                    i_subfields[-1] += '.'
+                field_610 = Field(tag = '610',
+                        indicators = ['1','0'],
+                        subfields = i_subfields)
+                record.add_ordered_field(field_610)
+        
+        if genre:
+            for i in genre:
+                if not i.endswith('.') and not i.endswith(')'):
+                    i += '.'
+                field_655 = Field(tag = '655',
+                        indicators = [' ','7'],
+                        subfields = [
+                            'a', i,
+                            '2', 'lcgft'])
+                record.add_ordered_field(field_655)
         
         if characters:
-            # print(characters)
-            subfield_content = 'Characters: '
-            for i in characters[:-1]:
-                subfield_content += i + '; '
-            subfield_content += characters[-1] + '.'
-            field_500 = Field(tag = '500',
+            field_500_chars = Field(tag = '500',
                         indicators = [' ', ' '],
                         subfields = [
-                            'a', subfield_content])
-            record.add_ordered_field(field_500)
-            
-            # Create 600 and 650 for "Fictitious character" entries
-            # TODO check for existing 650 and don't add if a duplicate
-            if any('Fictitious character' in c for c in characters):
-                fic_chars = [c for c in characters if 'Fictitious character' in c]
-                for i in fic_chars:
-                    fic_char_name = re.sub(r'^(.*?) (\(Fictitious character.*\))$', r'\g<1>', i)
-                    fic_char_c = re.sub(r'^(.*?) (\(Fictitious character.*\))$', r'\g<2>', i)
-                    field_600 = Field(tag = '600',
-                                indicators = ['0', '0'],
-                                subfields = [
-                                    'a', fic_char_name,
-                                    'c', fic_char_c])
-                    record.add_ordered_field(field_600)
-                    
-                    field_650 = Field(tag = '650',
-                                indicators = [' ', '0'],
-                                subfields = [
-                                    'a', i])
-                    record.add_ordered_field(field_650)
+                            'a', characters])
+            record.add_ordered_field(field_500_chars)
         
-        if penciller:
-            for i in penciller:
-                subfield_content = subfields_from_string_relator(i, 'penciller')
-                field_700 = Field(tag = '700',
-                            indicators = ['1',' '],
-                            subfields = subfield_content)
-                record.add_ordered_field(field_700)
+        if in_series:
+            subfields_773 = subfields_from_string(in_series)
+            field_773 = Field(tag = '773',
+                        indicators = ['0','8'],
+                        subfields = subfields_773)
+            record.add_ordered_field(field_773)
         
-        if inker:
-            for i in inker:
-                subfield_content = subfields_from_string_relator(i, 'inker')
-                field_700 = Field(tag = '700',
-                            indicators = ['1', ' '],
-                            subfields = subfield_content)
-                record.add_ordered_field(field_700)
+        subfields_852 = [
+            'b', 'CARRIER',
+            'c', 'carrspec']
+        if len(subfields_099) == 4:
+            subfields_852.append('h')
+            subfields_852.append(subfields_099[1])
+            subfields_852.append('i')
+            subfields_852.append(subfields_099[3])
+        if len(subfields_099) == 2:
+            subfields_852.append('h')
+            subfields_852.append(subfields_099[1])
+        if edition:
+            if edition.endswith('.'):
+                edition = edition[:-1]
+            subfields_852.append('z')
+            subfields_852.append(edition)
         
-        if colorist:
-            for i in colorist:
-                subfield_content = subfields_from_string_relator(i, 'colorist')
-                field_700 = Field(tag = '700',
-                            indicators = ['1', ' '],
-                            subfields = subfield_content)
-                record.add_ordered_field(field_700)
-        
-        if letterer:
-            for i in letterer:
-                subfield_content = subfields_from_string_relator(i, 'letterer')
-                field_700 = Field(tag = '700',
-                            indicators = ['1', ' '],
-                            subfields = subfield_content)
-                record.add_ordered_field(field_700)
-              
-        if cover_artist:
-            for i in cover_artist:
-                subfield_content = subfields_from_string_relator(i, 'cover artist')
-                field_700 = Field(tag = '700',
-                            indicators = ['1',' '],
-                            subfields = subfield_content)
-                record.add_ordered_field(field_700)
-        
-        if editor:
-            for i in editor:
-                subfield_content = subfields_from_string_relator(i, 'editor')
-                field_700 = Field(tag = '700',
-                            indicators = ['1', ' '],
-                            subfields = subfield_content)
-                record.add_ordered_field(field_700)
-        
-        # field_700 = Field(tag = '700',
-                    # indicators = ['7',' '],
-                    # subfields = [
-                        # 'a', doi,
-                        # '2', 'doi'])
-        
-        subfields_773 = subfields_from_string(series)
-        field_773 = Field(tag = '773',
-                    indicators = ['0','8'],
-                    subfields = subfields_773)
-        record.add_ordered_field(field_773)
-        
-        subfields_830 = []
-        if has_part_title:
-            subfields_830 = [
-                'a', lower_title[0] + '.',
-                'p', lower_title[1] + ' ;',
-                'v', lower_title[2] + '.']
-        else:
-            subfields_830 = [
-                'a', lower_title[0] + ' ;',
-                 'v', lower_title[1] + '.']
-        field_830 = Field(tag = '830',
-                    indicators = [' ','0'],
-                    subfields = subfields_830)
-        record.add_ordered_field(field_830)
+        field_852 = Field(tag = '852',
+                    indicators = ['8',' '],
+                    subfields = subfields_852)
+        record.add_ordered_field(field_852)
         
         outmarc.write(record.as_marc())
         print()
