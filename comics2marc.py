@@ -122,7 +122,7 @@ def year_from_date(string):
 
 
 def country_code_from_pub_place(string):
-    country_dict = {"Albania": "aa ", "Alberta": "abc", "Australian Capital Territory": "aca", "Algeria": "ae ", "Afghanistan": "af ", "Argentina": "ag ", "Armenia (Republic)": "ai ", "Azerbaijan": "aj ", "Alaska": "aku", "Alabama": "alu", "Anguilla": "am ", "Andorra": "an ", "Angola": "ao ", "Antigua and Barbuda": "aq ", "Arkansas": "aru", "American Samoa": "as ", "Australia": "at ", "Austria": "au ", "Aruba": "aw ", "Antarctica": "ay ", "Arizona": "azu", "Bahrain": "ba ", "Barbados": "bb ", "British Columbia": "bcc", "Burundi": "bd ", "Belgium": "be ", "Bahamas": "bf ", "Bangladesh": "bg ", "Belize": "bh ", "British Indian Ocean Territory": "bi ", "Brazil": "bl ", "Bermuda Islands": "bm ", "Bosnia and Herzegovina": "bn ", "Bolivia": "bo ", "Solomon Islands": "bp ", "Burma": "br ", "Botswana": "bs ", "Bhutan": "bt ", "Bulgaria": "bu ", "Bouvet Island": "bv ", "Belarus": "bw ", "Brunei": "bx ", "Caribbean Netherlands": "ca ", "California": "cau", "Cambodia": "cb ", "China": "cc ", "Chad": "cd ", "Sri Lanka": "ce ", "Congo (Brazzaville)": "cf ", "Congo (Democratic Republic)": "cg ", "China (Republic : 1949- )": "ch ", "Croatia": "ci ", "Cayman Islands": "cj ", "Colombia": "ck ", "Chile": "cl ", "Cameroon": "cm ", "Curaçao": "co ", "Colorado": "cou", "Comoros": "cq ", "Costa Rica": "cr ", "Connecticut": "ctu", "Cuba": "cu ", "Cabo Verde": "cv ", "Cook Islands": "cw ", "Central African Republic": "cx ", "Cyprus": "cy ", "District of Columbia": "dcu", "Delaware": "deu", "Denmark": "dk ", "Benin": "dm ", "Dominica": "dq ", "Dominican Republic": "dr ", "Eritrea": "ea ", "Ecuador": "ec ", "Equatorial Guinea": "eg ", "Timor-Leste": "em ", "England": "enk", "Estonia": "er ", "El Salvador": "es ", "Ethiopia": "et ", "Faroe Islands": "fa ", "French Guiana": "fg ", "Finland": "fi ", "Fiji": "fj ", "Falkland Islands": "fk ", "Florida": "flu", "Micronesia (Federated States)": "fm ", "French Polynesia": "fp ", "France": "fr ", "Terres australes et antarctiques françaises": "fs ", "Djibouti": "ft ", "Georgia": "gau", "Kiribati": "gb ", "Grenada": "gd ", "Guernsey": "gg ", "Ghana": "gh ", "Gibraltar": "gi ", "Greenland": "gl ", "Gambia": "gm ", "Gabon": "go ", "Guadeloupe": "gp ", "Greece": "gr ", "Georgia (Republic)": "gs ", "Guatemala": "gt ", "Guam": "gu ", "Guinea": "gv ", "Germany": "gw ", "Guyana": "gy ", "Gaza Strip": "gz ", "Hawaii": "hiu", "Heard and McDonald Islands": "hm ", "Honduras": "ho ", "Haiti": "ht ", "Hungary": "hu ", "Iowa": "iau", "Iceland": "ic ", "Idaho": "idu", "Ireland": "ie ", "India": "ii ", "Illinois": "ilu", "Isle of Man": "im ", "Indiana": "inu", "Indonesia": "io ", "Iraq": "iq ", "Iran": "ir ", "Israel": "is ", "Italy": "it ", "Côte d'Ivoire": "iv ", "Iraq-Saudi Arabia Neutral Zone": "iy ", "Japan": "ja ", "Jersey": "je ", "Johnston Atoll": "ji ", "Jamaica": "jm ", "Jordan": "jo ", "Kenya": "ke ", "Kyrgyzstan": "kg ", "Korea (North)": "kn ", "Korea (South)": "ko ", "Kansas": "ksu", "Kuwait": "ku ", "Kosovo": "kv ", "Kentucky": "kyu", "Kazakhstan": "kz ", "Louisiana": "lau", "Liberia": "lb ", "Lebanon": "le ", "Liechtenstein": "lh ", "Lithuania": "li ", "Lesotho": "lo ", "Laos": "ls ", "Luxembourg": "lu ", "Latvia": "lv ", "Libya": "ly ", "Massachusetts": "mau", "Manitoba": "mbc", "Monaco": "mc ", "Maryland": "mdu", "Maine": "meu", "Mauritius": "mf ", "Madagascar": "mg ", "Michigan": "miu", "Montserrat": "mj ", "Oman": "mk ", "Mali": "ml ", "Malta": "mm ", "Minnesota": "mnu", "Montenegro": "mo ", "Missouri": "mou", "Mongolia": "mp ", "Martinique": "mq ", "Morocco": "mr ", "Mississippi": "msu", "Montana": "mtu", "Mauritania": "mu ", "Moldova": "mv ", "Malawi": "mw ", "Mexico": "mx ", "Malaysia": "my ", "Mozambique": "mz ", "Nebraska": "nbu", "North Carolina": "ncu", "North Dakota": "ndu", "Netherlands": "ne ", "Newfoundland and Labrador": "nfc", "Niger": "ng ", "New Hampshire": "nhu", "Northern Ireland": "nik", "New Jersey": "nju", "New Brunswick": "nkc", "New Caledonia": "nl ", "New Mexico": "nmu", "Vanuatu": "nn ", "Norway": "no ", "Nepal": "np ", "Nicaragua": "nq ", "Nigeria": "nr ", "Nova Scotia": "nsc", "Northwest Territories": "ntc", "Nauru": "nu ", "Nunavut": "nuc", "Nevada": "nvu", "Northern Mariana Islands": "nw ", "Norfolk Island": "nx ", "New York": "nyu", "New Zealand": "nz ", "Ohio": "ohu", "Oklahoma": "oku", "Ontario": "onc", "Oregon": "oru", "Mayotte": "ot ", "Pennsylvania": "pau", "Pitcairn Island": "pc ", "Peru": "pe ", "Paracel Islands": "pf ", "Guinea-Bissau": "pg ", "Philippines": "ph ", "Prince Edward Island": "pic", "Pakistan": "pk ", "Poland": "pl ", "Panama": "pn ", "Portugal": "po ", "Papua New Guinea": "pp ", "Puerto Rico": "pr ", "Palau": "pw ", "Paraguay": "py ", "Qatar": "qa ", "Queensland": "qea", "Québec (Province)": "quc", "Serbia": "rb ", "Réunion": "re ", "Zimbabwe": "rh ", "Rhode Island": "riu", "Romania": "rm ", "Russia (Federation)": "ru ", "Rwanda": "rw ", "South Africa": "sa ", "Saint-Barthélemy": "sc ", "South Carolina": "scu", "South Sudan": "sd ", "South Dakota": "sdu", "Seychelles": "se ", "Sao Tome and Principe": "sf ", "Senegal": "sg ", "Spanish North Africa": "sh ", "Singapore": "si ", "Sudan": "sj ", "Sierra Leone": "sl ", "San Marino": "sm ", "Sint Maarten": "sn ", "Saskatchewan": "snc", "Somalia": "so ", "Spain": "sp ", "Eswatini": "sq ", "Surinam": "sr ", "Western Sahara": "ss ", "Saint-Martin": "st ", "Scotland": "stk", "Saudi Arabia": "su ", "Sweden": "sw ", "Namibia": "sx ", "Syria": "sy ", "Switzerland": "sz ", "Tajikistan": "ta ", "Turks and Caicos Islands": "tc ", "Togo": "tg ", "Thailand": "th ", "Tunisia": "ti ", "Turkmenistan": "tk ", "Tokelau": "tl ", "Tasmania": "tma", "Tennessee": "tnu", "Tonga": "to ", "Trinidad and Tobago": "tr ", "United Arab Emirates": "ts ", "Turkey": "tu ", "Tuvalu": "tv ", "Texas": "txu", "Tanzania": "tz ", "Egypt": "ua ", "United States Misc. Caribbean Islands": "uc ", "Uganda": "ug ", "Ukraine": "un ", "United States Misc. Pacific Islands": "up ", "Utah": "utu", "Burkina Faso": "uv ", "Uruguay": "uy ", "Uzbekistan": "uz ", "Virginia": "vau", "British Virgin Islands": "vb ", "Vatican City": "vc ", "Venezuela": "ve ", "Virgin Islands of the United States": "vi ", "Vietnam": "vm ", "Various places": "vp ", "Victoria": "vra", "Vermont": "vtu", "Washington (State)": "wau", "Western Australia": "wea", "Wallis and Futuna": "wf ", "Wisconsin": "wiu", "West Bank of the Jordan River": "wj ", "Wake Island": "wk ", "Wales": "wlk", "Samoa": "ws ", "West Virginia": "wvu", "Wyoming": "wyu", "Christmas Island (Indian Ocean)": "xa ", "Cocos (Keeling) Islands": "xb ", "Maldives": "xc ", "Saint Kitts-Nevis": "xd ", "Marshall Islands": "xe ", "Midway Islands": "xf ", "Coral Sea Islands Territory": "xga", "Niue": "xh ", "Saint Helena": "xj ", "Saint Lucia": "xk ", "Saint Pierre and Miquelon": "xl ", "Saint Vincent and the Grenadines": "xm ", "North Macedonia": "xn ", "New South Wales": "xna", "Slovakia": "xo ", "Northern Territory": "xoa", "Spratly Island": "xp ", "Czech Republic": "xr ", "South Australia": "xra", "South Georgia and the South Sandwich Islands": "xs ", "Slovenia": "xv ", "No place, unknown, or undetermined": "xx ", "Canada": "xxc", "United Kingdom": "xxk", "United States": "xxu", "Yemen": "ye ", "Yukon Territory": "ykc", "Zambia": "za "}
+    country_dict = {"Albania": "aa ", "Alberta": "abc", "Australian Capital Territory": "aca", "Algeria": "ae ", "Afghanistan": "af ", "Argentina": "ag ", "Armenia (Republic)": "ai ", "Azerbaijan": "aj ", "Alaska": "aku", "Alabama": "alu", "Anguilla": "am ", "Andorra": "an ", "Angola": "ao ", "Antigua and Barbuda": "aq ", "Arkansas": "aru", "American Samoa": "as ", "Australia": "at ", "Austria": "au ", "Aruba": "aw ", "Antarctica": "ay ", "Arizona": "azu", "Bahrain": "ba ", "Barbados": "bb ", "British Columbia": "bcc", "Burundi": "bd ", "Belgium": "be ", "Bahamas": "bf ", "Bangladesh": "bg ", "Belize": "bh ", "British Indian Ocean Territory": "bi ", "Brazil": "bl ", "Bermuda Islands": "bm ", "Bosnia and Herzegovina": "bn ", "Bolivia": "bo ", "Solomon Islands": "bp ", "Burma": "br ", "Botswana": "bs ", "Bhutan": "bt ", "Bulgaria": "bu ", "Bouvet Island": "bv ", "Belarus": "bw ", "Brunei": "bx ", "Caribbean Netherlands": "ca ", "California": "cau", "Cambodia": "cb ", "China": "cc ", "Chad": "cd ", "Sri Lanka": "ce ", "Congo (Brazzaville)": "cf ", "Congo (Democratic Republic)": "cg ", "China (Republic : 1949- )": "ch ", "Croatia": "ci ", "Cayman Islands": "cj ", "Colombia": "ck ", "Chile": "cl ", "Cameroon": "cm ", "Curaçao": "co ", "Colorado": "cou", "Comoros": "cq ", "Costa Rica": "cr ", "Connecticut": "ctu", "Cuba": "cu ", "Cabo Verde": "cv ", "Cook Islands": "cw ", "Central African Republic": "cx ", "Cyprus": "cy ", "District of Columbia": "dcu", "Delaware": "deu", "Denmark": "dk ", "Benin": "dm ", "Dominica": "dq ", "Dominican Republic": "dr ", "Eritrea": "ea ", "Ecuador": "ec ", "Equatorial Guinea": "eg ", "Timor-Leste": "em ", "England": "enk", "Estonia": "er ", "El Salvador": "es ", "Ethiopia": "et ", "Faroe Islands": "fa ", "French Guiana": "fg ", "Finland": "fi ", "Fiji": "fj ", "Falkland Islands": "fk ", "Florida": "flu", "Micronesia (Federated States)": "fm ", "French Polynesia": "fp ", "France": "fr ", "Terres australes et antarctiques françaises": "fs ", "Djibouti": "ft ", "Georgia": "gau", "Kiribati": "gb ", "Grenada": "gd ", "Guernsey": "gg ", "Ghana": "gh ", "Gibraltar": "gi ", "Greenland": "gl ", "Gambia": "gm ", "Gabon": "go ", "Guadeloupe": "gp ", "Greece": "gr ", "Georgia (Republic)": "gs ", "Guatemala": "gt ", "Guam": "gu ", "Guinea": "gv ", "Germany": "gw ", "Guyana": "gy ", "Gaza Strip": "gz ", "Hawaii": "hiu", "Heard and McDonald Islands": "hm ", "Honduras": "ho ", "Haiti": "ht ", "Hungary": "hu ", "Iowa": "iau", "Iceland": "ic ", "Idaho": "idu", "Ireland": "ie ", "India": "ii ", "Illinois": "ilu", "Isle of Man": "im ", "Indiana": "inu", "Indonesia": "io ", "Iraq": "iq ", "Iran": "ir ", "Israel": "is ", "Italy": "it ", "Côte d'Ivoire": "iv ", "Iraq-Saudi Arabia Neutral Zone": "iy ", "Japan": "ja ", "Jersey": "je ", "Johnston Atoll": "ji ", "Jamaica": "jm ", "Jordan": "jo ", "Kenya": "ke ", "Kyrgyzstan": "kg ", "Korea (North)": "kn ", "Korea (South)": "ko ", "Kansas": "ksu", "Kuwait": "ku ", "Kosovo": "kv ", "Kentucky": "kyu", "Kazakhstan": "kz ", "Louisiana": "lau", "Liberia": "lb ", "Lebanon": "le ", "Liechtenstein": "lh ", "Lithuania": "li ", "Lesotho": "lo ", "Laos": "ls ", "Luxembourg": "lu ", "Latvia": "lv ", "Libya": "ly ", "Massachusetts": "mau", "Manitoba": "mbc", "Monaco": "mc ", "Maryland": "mdu", "Maine": "meu", "Mauritius": "mf ", "Madagascar": "mg ", "Michigan": "miu", "Montserrat": "mj ", "Oman": "mk ", "Mali": "ml ", "Malta": "mm ", "Minnesota": "mnu", "Montenegro": "mo ", "Missouri": "mou", "Mongolia": "mp ", "Martinique": "mq ", "Morocco": "mr ", "Mississippi": "msu", "Montana": "mtu", "Mauritania": "mu ", "Moldova": "mv ", "Malawi": "mw ", "Mexico": "mx ", "Malaysia": "my ", "Mozambique": "mz ", "Nebraska": "nbu", "North Carolina": "ncu", "North Dakota": "ndu", "Netherlands": "ne ", "Newfoundland and Labrador": "nfc", "Niger": "ng ", "New Hampshire": "nhu", "Northern Ireland": "nik", "New Jersey": "nju", "New Brunswick": "nkc", "New Caledonia": "nl ", "New Mexico": "nmu", "Vanuatu": "nn ", "Norway": "no ", "Nepal": "np ", "Nicaragua": "nq ", "Nigeria": "nr ", "Nova Scotia": "nsc", "Northwest Territories": "ntc", "Nauru": "nu ", "Nunavut": "nuc", "Nevada": "nvu", "Northern Mariana Islands": "nw ", "Norfolk Island": "nx ", "New York": "nyu", "New Zealand": "nz ", "Ohio": "ohu", "Oklahoma": "oku", "Ontario": "onc", "Oregon": "oru", "Mayotte": "ot ", "Pennsylvania": "pau", "Pitcairn Island": "pc ", "Peru": "pe ", "Paracel Islands": "pf ", "Guinea-Bissau": "pg ", "Philippines": "ph ", "Prince Edward Island": "pic", "Pakistan": "pk ", "Poland": "pl ", "Panama": "pn ", "Portugal": "po ", "Papua New Guinea": "pp ", "Puerto Rico": "pr ", "Palau": "pw ", "Paraguay": "py ", "Qatar": "qa ", "Queensland": "qea", "Québec (Province)": "quc", "Serbia": "rb ", "Réunion": "re ", "Zimbabwe": "rh ", "Rhode Island": "riu", "Romania": "rm ", "Russia (Federation)": "ru ", "Rwanda": "rw ", "South Africa": "sa ", "Saint-Barthélemy": "sc ", "South Carolina": "scu", "South Sudan": "sd ", "South Dakota": "sdu", "Seychelles": "se ", "Sao Tome and Principe": "sf ", "Senegal": "sg ", "Spanish North Africa": "sh ", "Singapore": "si ", "Sudan": "sj ", "Sierra Leone": "sl ", "San Marino": "sm ", "Sint Maarten": "sn ", "Saskatchewan": "snc", "Somalia": "so ", "Spain": "sp ", "Eswatini": "sq ", "Surinam": "sr ", "Western Sahara": "ss ", "Saint-Martin": "st ", "Scotland": "stk", "Saudi Arabia": "su ", "Sweden": "sw ", "Namibia": "sx ", "Syria": "sy ", "Switzerland": "sz ", "Tajikistan": "ta ", "Turks and Caicos Islands": "tc ", "Togo": "tg ", "Thailand": "th ", "Tunisia": "ti ", "Turkmenistan": "tk ", "Tokelau": "tl ", "Tasmania": "tma", "Tennessee": "tnu", "Tonga": "to ", "Trinidad and Tobago": "tr ", "United Arab Emirates": "ts ", "Turkey": "tu ", "Tuvalu": "tv ", "Texas": "txu", "Tanzania": "tz ", "Egypt": "ua ", "United States Misc. Caribbean Islands": "uc ", "Uganda": "ug ", "Ukraine": "un ", "United States Misc. Pacific Islands": "up ", "Utah": "utu", "Burkina Faso": "uv ", "Uruguay": "uy ", "Uzbekistan": "uz ", "Virginia": "vau", "British Virgin Islands": "vb ", "Vatican City": "vc ", "Venezuela": "ve ", "Virgin Islands of the United States": "vi ", "Vietnam": "vm ", "Various places": "vp ", "Victoria": "vra", "Vermont": "vtu", "Washington": "wau", "Western Australia": "wea", "Wallis and Futuna": "wf ", "Wisconsin": "wiu", "West Bank of the Jordan River": "wj ", "Wake Island": "wk ", "Wales": "wlk", "Samoa": "ws ", "West Virginia": "wvu", "Wyoming": "wyu", "Christmas Island (Indian Ocean)": "xa ", "Cocos (Keeling) Islands": "xb ", "Maldives": "xc ", "Saint Kitts-Nevis": "xd ", "Marshall Islands": "xe ", "Midway Islands": "xf ", "Coral Sea Islands Territory": "xga", "Niue": "xh ", "Saint Helena": "xj ", "Saint Lucia": "xk ", "Saint Pierre and Miquelon": "xl ", "Saint Vincent and the Grenadines": "xm ", "North Macedonia": "xn ", "New South Wales": "xna", "Slovakia": "xo ", "Northern Territory": "xoa", "Spratly Island": "xp ", "Czech Republic": "xr ", "South Australia": "xra", "South Georgia and the South Sandwich Islands": "xs ", "Slovenia": "xv ", "No place, unknown, or undetermined": "xx ", "Canada": "xxc", "United Kingdom": "xxk", "United States": "xxu", "Yemen": "ye ", "Yukon Territory": "ykc", "Zambia": "za "}
     if "Place of publication not identified" in string:
         country = "No place, unknown, or undetermined"
     else:
@@ -161,16 +161,16 @@ def main(arglist):
     subj_person_col = col_headers.index('Subject_Person')
     subj_topical_col = col_headers.index('Subject_Topical')
     subj_place_col = col_headers.index('Subject_Place')
-    subj_corp_col = col_headers.index('Subject_Jurisdiction')
+    subj_corp_col = col_headers.index('Subject_Jurisdictional')
     genre_col = col_headers.index('Genre')
-    pages_col = col_headers.index('Page Count')
-    pub_date_col = col_headers.index('Publication Date')
+    pages_col = col_headers.index('Pages')
+    pub_date_col = col_headers.index('Date') # previously Publication Date
     copy_date_col = col_headers.index('Copyright Date')
-    pub_place_col = col_headers.index('Place of Publication')
+    pub_place_col = col_headers.index('Pub_Place')
     publisher_col = col_headers.index('Publisher')
     edition_col = col_headers.index('Edition')
     source_col = col_headers.index('Source')
-    source_acq_col = col_headers.index('Source of Acquisition')
+    # source_acq_col = col_headers.index('Source of Acquisition')
     writer_col = col_headers.index('Writer')
     penciller_col = col_headers.index('Penciller')
     inker_col = col_headers.index('Inker')
@@ -179,9 +179,9 @@ def main(arglist):
     cover_artist_col = col_headers.index('Cover Artist')
     editor_col = col_headers.index('Editor')
     # hist_note_col = col_headers.index('Historical Note')
-    notes_col = col_headers.index('Notes')
+    notes_col = col_headers.index('Note')
     characters_col = col_headers.index('Characters')
-    synopsis_col = col_headers.index('Synopsis')
+    synopsis_col = col_headers.index('Story Arc')
     toc_col = col_headers.index('Table of Contents')
     in_series_col = col_headers.index('Is Part of Series')
     black_creators_col = col_headers.index('Black Creators (MARC 590)')
@@ -189,6 +189,8 @@ def main(arglist):
     isbn_col = col_headers.index('ISBN')
     color_col = col_headers.index('Color?')
     series_note_col = col_headers.index('Series Note')
+    copyright_holder_col = col_headers.index('Copyright holder')
+    gcd_uri_col = col_headers.index('Grand Comics Database')
     
     outmarc = open('records.mrc', 'wb')
     
@@ -283,7 +285,7 @@ def main(arglist):
         publisher = sheet.cell(row, publisher_col).value
         edition = sheet.cell(row, edition_col).value
         source = sheet.cell(row, source_col).value
-        source_acq = sheet.cell(row, source_acq_col).value
+        # source_acq = sheet.cell(row, source_acq_col).value
         characters = sheet.cell(row, characters_col).value
         black_creators = sheet.cell(row, black_creators_col).value
         if black_creators:
@@ -294,9 +296,14 @@ def main(arglist):
         isbn = str(sheet.cell(row, isbn_col).value)
         color = sheet.cell(row, color_col).value
         series_note = sheet.cell(row, series_note_col).value
+        gcd_uri = sheet.cell(row, gcd_uri_col).value
         
         country_code = country_code_from_pub_place(pub_place)
         
+        copyright_holder = []
+        if sheet.cell(row, copyright_holder_col).value:
+            copyright_holder = sheet.cell(row, copyright_holder_col).value
+            copyright_holder = [x.strip() for x in copyright_holder.split(';')]
         writer = []
         if sheet.cell(row, writer_col).value:
             writer = sheet.cell(row, writer_col).value
@@ -339,59 +346,62 @@ def main(arglist):
             toc = sheet.cell(row, toc_col).value
         in_series = sheet.cell(row, in_series_col).value
         
-        
         contribs = {}
-        if writer:
-            for i in writer:
-                contribs.update({i: ['writer']})
-        if penciller:
-            for i in penciller:
-                if i in contribs:
-                    role_list = contribs[i]
-                    role_list.append('penciller')
-                    contribs.update({i: role_list})
-                else:
-                    contribs.update({i: ['penciller']})
-        if inker:
-            for i in inker:
-                if i in contribs:
-                    role_list = contribs[i]
-                    role_list.append('inker')
-                    contribs.update({i: role_list})
-                else:
-                    contribs.update({i: ['inker']})
-        if colorist:
-            for i in colorist:
-                if i in contribs:
-                    role_list = contribs[i]
-                    role_list.append('colorist')
-                    contribs.update({i: role_list})
-                else:
-                    contribs.update({i: ['colorist']})
-        if letterer:
-            for i in letterer:
-                if i in contribs:
-                    role_list = contribs[i]
-                    role_list.append('letterer')
-                    contribs.update({i: role_list})
-                else:
-                    contribs.update({i: ['letterer']})
-        if cover_artist:
-            for i in cover_artist:
-                if i in contribs:
-                    role_list = contribs[i]
-                    role_list.append('cover artist')
-                    contribs.update({i: role_list})
-                else:
-                    contribs.update({i: ['cover artist']})
-        if editor:
-            for i in editor:
-                if i in contribs:
-                    role_list = contribs[i]
-                    role_list.append('editor')
-                    contribs.update({i: role_list})
-                else:
-                    contribs.update({i: ['editor']})
+        if copyright_holder:
+            for i in copyright_holder:
+                contribs.update({i: ['copyright holder']})
+        else:
+            if writer:
+                for i in writer:
+                    contribs.update({i: ['writer']})
+            if penciller:
+                for i in penciller:
+                    if i in contribs:
+                        role_list = contribs[i]
+                        role_list.append('penciller')
+                        contribs.update({i: role_list})
+                    else:
+                        contribs.update({i: ['penciller']})
+            if inker:
+                for i in inker:
+                    if i in contribs:
+                        role_list = contribs[i]
+                        role_list.append('inker')
+                        contribs.update({i: role_list})
+                    else:
+                        contribs.update({i: ['inker']})
+            if colorist:
+                for i in colorist:
+                    if i in contribs:
+                        role_list = contribs[i]
+                        role_list.append('colorist')
+                        contribs.update({i: role_list})
+                    else:
+                        contribs.update({i: ['colorist']})
+            if letterer:
+                for i in letterer:
+                    if i in contribs:
+                        role_list = contribs[i]
+                        role_list.append('letterer')
+                        contribs.update({i: role_list})
+                    else:
+                        contribs.update({i: ['letterer']})
+            if cover_artist:
+                for i in cover_artist:
+                    if i in contribs:
+                        role_list = contribs[i]
+                        role_list.append('cover artist')
+                        contribs.update({i: role_list})
+                    else:
+                        contribs.update({i: ['cover artist']})
+            if editor:
+                for i in editor:
+                    if i in contribs:
+                        role_list = contribs[i]
+                        role_list.append('editor')
+                        contribs.update({i: role_list})
+                    else:
+                        contribs.update({i: ['editor']})
         
         record = Record()
         
@@ -441,7 +451,13 @@ def main(arglist):
         record.add_ordered_field(field_099)
         
         for i in contribs:
-            if i == list(contribs.keys())[0] and 'writer' in contribs[i]: # first contributor is a writer
+            if i == list(contribs.keys())[0] and 'copyright holder' in contribs[i]: # first contributor is copyright holder
+                subfield_content = subfields_from_string_relator(i, contribs[i])
+                field_110 = Field(tag = '110',
+                        indicators = ['2', ' '],
+                        subfields = subfield_content)
+                record.add_ordered_field(field_110)
+            elif i == list(contribs.keys())[0] and 'writer' in contribs[i]: # first contributor is a writer
                 subfield_content = subfields_from_string_relator(i, contribs[i])
                 field_100 = Field(tag = '100',
                         indicators = ['1', ' '],
@@ -460,7 +476,7 @@ def main(arglist):
                                 subfields = subfield_content)
                     record.add_ordered_field(field_700)
         
-        if contribs and 'writer' in contribs[list(contribs.keys())[0]]:
+        if contribs and ('writer' in contribs[list(contribs.keys())[0]] or 'copyright holder' in contribs[list(contribs.keys())[0]]):
             f245_ind1 = 1
         else:
             f245_ind1 = 0
@@ -511,11 +527,11 @@ def main(arglist):
                             'c', '©' + copy_date_str])
             record.add_ordered_field(field_264_4)
         
-        if color == 'y':
+        if color == 'yes':
             subfields_300 = [
                 'a', pages + ' pages :',
                 'b', 'chiefly color illustrations.']
-        elif color == 'n':
+        elif color == 'no':
             subfields_300 = [
                 'a', pages + ' pages :',
                 'b', 'black and white illustrations.']
@@ -597,12 +613,12 @@ def main(arglist):
                             'a', source + '.'])
             record.add_ordered_field(field_541_source)
         
-        if source_acq:
-            field_541_source_acq = Field(tag = '541',
-                        indicators = [' ',' '],
-                        subfields = [
-                            'a', source_acq + '.'])
-            record.add_ordered_field(field_541_source_acq)
+        # if source_acq:
+            # field_541_source_acq = Field(tag = '541',
+                        # indicators = [' ',' '],
+                        # subfields = [
+                            # 'a', source_acq + '.'])
+            # record.add_ordered_field(field_541_source_acq)
         
         if subj_person:
             for i in subj_person:
@@ -677,6 +693,19 @@ def main(arglist):
                         subfields = [
                             'a', characters])
             record.add_ordered_field(field_500_chars)
+        
+        if gcd_uri:
+            title_758 = subfields_from_string(title)[1]
+            if title_758.endswith(',') or title_758.endswith(':'):
+                title_758 = title_758[:-1]
+            field_758 = Field(tag = '758',
+                        indicators = [' ',' '],
+                        subfields = [
+                            '4', 'http://rdaregistry.info/Elements/m/P30135',
+                            'i', 'Has work manifested:',
+                            'a', title_758,
+                            '1', gcd_uri])
+            record.add_ordered_field(field_758)
         
         if in_series:
             subfields_773 = subfields_from_string(in_series)
