@@ -193,7 +193,7 @@ def main(arglist):
     gcd_uri_col = col_headers.index('GCD URL')
     copies_col = col_headers.index('Copies')
     
-    outmarc = open('records.mrc', 'wb')
+    outmarc = open('records_Flota.mrc', 'wb')
     
     # Boilerplate fields
     field_ldr = '00000nam a2200000Ii 4500'
@@ -245,6 +245,19 @@ def main(arglist):
                 subfields = [
                     'a', 'Copyright not evaluated',
                     'u', 'http://rightsstatements.org/vocab/CNE/1.0/'])
+    field_545 = Field(tag = '545',
+                indicators = [' ',' '],
+                subfields = [
+                    'a', "This collection was assembled by Dr. Brian Flota, Humanities Librarian at James Madison University, and his father, Bradley Flota (1948-2015). Bradley Flota graduated from Mount Vernon (Illinois) Township High School in 1966 and served in the United States Army from 1970 to 1972. He was also a musician, contributing vocals and guitar intermittently to The Time Actions, who became A&M Records recording artists, Head East, from 1969 to 1973. He was a police officer for the Mount Vernon Police Department from 1974 to 1998, serving as a D.A.R.E. (Drug Abuse Resistance Education) officer for the last eight years of his career with the department. Though Bradley Flota had been collecting comic books since childhood, those collections would fall out of his possession. He gave his young son Brian a selection of about one hundred comics in 1983, which formed the basis of Brian's collection. In 1985, Bradley Flota began collecting the comics that make up this collection. He collected comics voraciously from 1985 to 1997. From that time until 2008, he collected more infrequently. Brian Flota began collecting in earnest in 1987 at the age of eleven, eventually amassing around 2,700 comics when he ceased collecting around 1998. Of those 2,700 comics, Brian Flota donated a portion of the collection to the University of California, Riverside prior to his donation to JMU Special Collections in 2015. Brian Flota holds his MS in Library and Information Sciences from the University of Illinois at Urbana-Champaign, his Ph.D. in American Literature from The George Washington University, and his B.A. in English from the University of California, Riverside. He is also the co-editor of The Politics of Post-9/11 Music, published by Ashgate in 2011."])
+    field_555 = Field(tag = '555',
+                indicators = ['0',' '],
+                subfields = [
+                    'a', 'View detailed inventory and request for use in Special Collections:',
+                    'u', 'https://aspace.lib.jmu.edu/repositories/4/resources/212'])
+    field_561 = Field(tag = '561',
+                indicators = [' ',' '],
+                subfields = [
+                    'a', "Brian Flota donated his personal collection of approximately 2,700 comic books in March 2015. In July 2016, Brian Flota donated Bradley Flota's collection of approximately 7,000 comic books."])
     field_588 = Field(tag = '588',
                 indicators = ['0',' '],
                 subfields = [
@@ -426,6 +439,9 @@ def main(arglist):
         record.add_ordered_field(field_380)
         record.add_ordered_field(field_506)
         record.add_ordered_field(field_542)
+        record.add_ordered_field(field_545)
+        record.add_ordered_field(field_555)
+        record.add_ordered_field(field_561)
         record.add_ordered_field(field_588)
         record.add_ordered_field(field_655_lcgft)
         record.add_ordered_field(field_989)        
