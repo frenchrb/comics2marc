@@ -240,6 +240,15 @@ def main(arglist):
                     indicators = ['1',' '],
                     subfields = [
                         'a', 'Collection open to research. Researchers must register and agree to copyright and privacy laws before using this collection. Please contact Research Services staff before visiting the James Madison University Special Collections Library to use this collection.'])
+    field_541_flota1 = Field(tag = '541',
+                indicators = ['1',' '],
+                subfields = [
+                    'c', 'Gift;',
+                    'a', 'Brian Flota.'])
+    field_541_flota2 = Field(tag = '541',
+                indicators = ['1',' '],
+                subfields = [
+                    'a', "Brian Flota donated his personal collection of approximately 2,700 comic books in March 2015. In July 2016, Brian Flota donated Bradley Flota's collection of approximately 7,000 comic books."])
     field_542 = Field(tag = '542',
                 indicators = [' ',' '],
                 subfields = [
@@ -254,10 +263,6 @@ def main(arglist):
                 subfields = [
                     'a', 'View detailed inventory and request for use in Special Collections:',
                     'u', 'https://aspace.lib.jmu.edu/repositories/4/resources/212'])
-    field_561 = Field(tag = '561',
-                indicators = [' ',' '],
-                subfields = [
-                    'a', "Brian Flota donated his personal collection of approximately 2,700 comic books in March 2015. In July 2016, Brian Flota donated Bradley Flota's collection of approximately 7,000 comic books."])
     field_588 = Field(tag = '588',
                 indicators = ['0',' '],
                 subfields = [
@@ -438,10 +443,11 @@ def main(arglist):
         record.add_ordered_field(field_338)
         record.add_ordered_field(field_380)
         record.add_ordered_field(field_506)
+        record.add_ordered_field(field_541_flota1)
+        record.add_ordered_field(field_541_flota2)
         record.add_ordered_field(field_542)
         record.add_ordered_field(field_545)
         record.add_ordered_field(field_555)
-        record.add_ordered_field(field_561)
         record.add_ordered_field(field_588)
         record.add_ordered_field(field_655_lcgft)
         record.add_ordered_field(field_989)        
