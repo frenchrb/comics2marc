@@ -306,6 +306,7 @@ def main(arglist):
         isbn = str(sheet.cell(row, isbn_col).value)
         color = sheet.cell(row, color_col).value
         series_note = sheet.cell(row, series_note_col).value
+        series_note = [x.strip() for x in series_note.split(';')]
         gcd_uri = sheet.cell(row, gcd_uri_col).value
         
         country_code = country_code_from_pub_place(pub_place)
@@ -593,10 +594,11 @@ def main(arglist):
         if series_note:
             # if not series_note.endswith('.'):
                 # series_note += '.'
-            field_490_series_note = Field(tag = '490',
-                                    indicators = ['0', ' '],
-                                    subfields = ['a', series_note])
-            record.add_ordered_field(field_490_series_note)
+            for i in series_note:
+                field_490_series_note = Field(tag = '490',
+                                        indicators = ['0', ' '],
+                                        subfields = ['a', i])
+                record.add_ordered_field(field_490_series_note)
         
         # if hist_note:
         #     field_500_hist = Field(tag = '500',
