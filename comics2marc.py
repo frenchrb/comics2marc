@@ -50,6 +50,21 @@ def subfields_from_string(string):
     return subfields
 
 
+def subfields_from_string_series(string):
+    subfields = []
+    if '$' in string:
+        string = string.split('$')
+        for x in string:
+            if not x == '':
+                if x[0:1] == 's' or x[0:1] =='t':
+                    subfields.append(x[0:1])
+                    subfields.append(x[1:])
+                else:
+                    subfields.append('t')
+                    subfields.append(x)
+    return subfields
+
+
 def subfields_from_string_relator(string, relators):
     subfields = subfields_from_string(string)
     
@@ -761,9 +776,7 @@ def main(arglist):
             record.add_ordered_field(field_758)
         
         if in_series:
-            subfields_773 = subfields_from_string(in_series)
-            if subfields_773[0] == 'a':
-                subfields_773[0] = 't'
+            subfields_773 = subfields_from_string_series(in_series)
             field_773 = Field(tag = '773',
                         indicators = ['0','8'],
                         subfields = subfields_773)
